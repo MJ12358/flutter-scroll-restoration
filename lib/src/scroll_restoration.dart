@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// A function that builds a widget with a [ScrollController].
 typedef ScrollRestorationBuilder = Widget Function(
   BuildContext,
   ScrollController,
@@ -28,6 +29,7 @@ class ScrollRestoration extends StatefulWidget {
   ScrollRestorationState createState() => ScrollRestorationState();
 }
 
+/// State for [ScrollRestoration].
 class ScrollRestorationState extends State<ScrollRestoration> {
   late final ScrollController _controller;
   late final SharedPreferences _prefs;
@@ -45,7 +47,7 @@ class ScrollRestorationState extends State<ScrollRestoration> {
 
     // Wait for first frame so controller has a valid position
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_controller.hasClients) {
+      if (!_controller.hasClients || _controller.positions.isEmpty) {
         return;
       }
 
@@ -60,18 +62,18 @@ class ScrollRestorationState extends State<ScrollRestoration> {
 
   void _saveOffset() {
     // Only save when scrolling stops
-    if (!_controller.position.isScrollingNotifier.value) {
-      if (!_controller.hasClients) {
-        return;
-      }
-      _prefs.setDouble(widget.id, _controller.offset);
+    if (!_controller.hasClients || !_controller.position.hasContentDimensions) {
+      return;
     }
+    _prefs.setDouble(widget.id, _controller.offset);
   }
 
   @override
   void dispose() {
-    _controller.position.isScrollingNotifier.removeListener(_saveOffset);
-    _controller.dispose();
+    if (_controller.hasClients) {
+      _controller.position.isScrollingNotifier.removeListener(_saveOffset);
+      _controller.dispose();
+    }
     super.dispose();
   }
 

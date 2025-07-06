@@ -1,6 +1,6 @@
 name: scroll_restoration
 description: A Flutter widget that automatically saves and restores scroll positions for any scrollable widget.
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/mj12358/flutter-scroll-restoration
 funding:
   - https://www.buymeacoffee.com/mj12358

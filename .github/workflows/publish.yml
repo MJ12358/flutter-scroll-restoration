@@ -35,15 +35,13 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          # flutter-version: ${{ steps.pubspec.outputs['environment.flutter'] }}
+          flutter-version: 3.32.2
 
       - name: Get dependencies
         run: flutter pub get
 
-      # This produces too many warnings right now
-      # Run linter
-      # - name: Analyze
-      #   run: flutter analyze
+      - name: Analyze
+        run: flutter analyze
 
       - name: Run tests
         run: flutter test
